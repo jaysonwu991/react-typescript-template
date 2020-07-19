@@ -5,11 +5,55 @@ body {
 }
 
 #container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
   height: 100vh;
   background-color: #222d32;
-  color: #fff;
-  font-size: 100px;
+
+  .information {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #994639;
+    color: #fff;
+
+    // .avatar {
+    //   flex: 1;
+    //   width: 80px;
+    //   height: 80px;
+    //   background-color: #ccc;
+    //   border-radius: 50%;
+    // }
+
+    .quote {
+      flex: 1;
+      margin: 20px;
+      font-size: 60px;
+    }
+  }
+
+  .languages {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    margin: 60px 20px 20px;
+    font-size: 30px;
+    color: #fff;
+
+    .language-item {
+      flex: 0 0 16%;
+      margin: 10px;
+      height: 100px;
+      line-height: 100px;
+      text-align: center;
+      border: 2px dashed #fff;
+      border-radius: 4rpx;
+
+      &:hover {
+        background-color: #F75C2F;
+        font-size: 32px;
+      }
+    }
+  }
 }
