@@ -1,6 +1,6 @@
 const path = require('path')
 const argv = require('yargs').argv
-const merge = require('webpack-merge')
+const { merge } = require('webpack-merge')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
@@ -123,11 +123,12 @@ module.exports = merge(webpackConfig, {
       template: path.resolve(__dirname, '../public/index.html'),
       showErrors: true
     }),
-    new CopyWebpackPlugin([
-      {
-        from: 'public',
-        ignore: ['index.html']
-      }
-    ])
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: 'public'
+        }
+      ]
+    })
   ]
 })

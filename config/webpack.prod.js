@@ -1,5 +1,5 @@
 const path = require('path')
-const merge = require('webpack-merge')
+const { merge } = require('webpack-merge')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const TerserPlugin = require('terser-webpack-plugin')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
@@ -10,7 +10,7 @@ const CompressionWebpackPlugin = require('compression-webpack-plugin')
 const productionGzipExtensions = ['js', 'css']
 const baseWebpackConfig = require('./webpack.base')
 
-module.exports = merge.smart(baseWebpackConfig, {
+module.exports = merge(baseWebpackConfig, {
   mode: 'production',
   devtool: 'none',
   output: {
