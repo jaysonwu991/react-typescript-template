@@ -7,7 +7,7 @@ const baseWebpackConfig = require('./webpack.base')
 module.exports = merge(baseWebpackConfig, {
   mode: 'development',
   output: {
-    filename: '[name].[hash:8].js',
+    filename: 'script/[name].[hash:8].js',
     publicPath: '/'
   },
   plugins: [
@@ -20,21 +20,19 @@ module.exports = merge(baseWebpackConfig, {
     }),
     new webpack.HotModuleReplacementPlugin()
   ],
-  devtool: '#@cheap-eval-source-map',
   devServer: {
-    port: 8080,
-    host: 'localhost',
-    contentBase: path.join(__dirname, '../public'),
-    watchContentBase: true,
-    publicPath: '/',
-    compress: true,
-    historyApiFallback: true,
     hot: true,
-    clientLogLevel: 'error',
     open: true,
-    overlay: false,
+    port: 8080,
     quiet: false,
     noInfo: false,
+    overlay: false,
+    compress: true,
+    publicPath: '/',
+    clientLogLevel: 'error',
+    historyApiFallback: true,
+    contentBase: path.join(__dirname, '../public'),
+    watchContentBase: true,
     watchOptions: {
       ignored: /node_modules/
     }

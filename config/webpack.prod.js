@@ -12,16 +12,16 @@ const baseWebpackConfig = require('./webpack.base')
 
 module.exports = merge(baseWebpackConfig, {
   mode: 'production',
-  devtool: 'none',
+  devtool: 'hidden-source-map',
   output: {
-    filename: '[name].[contenthash:8].js'
+    filename: 'script/[name].[contenthash:8].js'
   },
   module: {
     rules: [
       {
         oneOf: [
           {
-            test: /\.(css|scss)$/,
+            test: /\.s?css$/,
             use: [
               MiniCssExtractPlugin.loader,
               {
@@ -30,25 +30,6 @@ module.exports = merge(baseWebpackConfig, {
               'postcss-loader',
               'sass-loader'
             ]
-          },
-          {
-            test: /\.(jpg|jpeg|bmp|png|webp|gif)$/,
-            loader: 'url-loader',
-            options: {
-              limit: 8 * 1024,
-              name: 'imgs/[name].[contenthash:8].[ext]',
-              outputPath: 'static',
-              publicPath: path.resolve(__dirname, '../dist')
-            }
-          },
-          {
-            exclude: [/\.(js|jsx|mjs|ts|tsx|css|scss)$/, /\.html$/, /\.json$/],
-            loader: 'file-loader',
-            options: {
-              name: 'media/[path][name].[contenthash:8].[ext]',
-              outputPath: 'static',
-              publicPath: path.resolve(__dirname, '../dist')
-            }
           }
         ]
       }
@@ -80,7 +61,7 @@ module.exports = merge(baseWebpackConfig, {
       filename: 'style/[name].[contenthash:8].css'
     }),
     new CompressionWebpackPlugin({
-      filename: '[path].gz[query]',
+      filename: '[path][name].gz[query]',
       algorithm: 'gzip',
       test: new RegExp('\\.(' + productionGzipExtensions.join('|') + ')$'),
       threshold: 10240,
@@ -105,11 +86,9 @@ module.exports = merge(baseWebpackConfig, {
     },
     minimizer: [
       new OptimizeCSSAssetsPlugin({
-        cssProcessorOptions: true ? { map: { inline: false } } : {}
+        cssProcessorOptions: { map: { inline: false } }
       }),
-      new TerserPlugin({
-        sourceMap: false
-      })
+      new TerserPlugin()
     ]
   }
 })

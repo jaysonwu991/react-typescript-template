@@ -25,13 +25,13 @@ if (bundleAnalyzerReport) {
 }
 
 module.exports = merge(webpackConfig, {
-  devtool: 'cheap-module-eval-source-map',
+  devtool: 'eval-cheap-module-source-map',
   entry: {
     app: './src/index.tsx',
     vendor: ['react', 'react-dom']
   },
   output: {
-    filename: '[name].bundle.js',
+    filename: 'script/[name].bundle.js',
     path: path.resolve(__dirname, '../dist'),
     publicPath: '/'
   },
@@ -74,7 +74,7 @@ module.exports = merge(webpackConfig, {
             ]
           },
           {
-            test: /\.(css|scss)$/,
+            test: /\.s?css$/,
             use: [
               { loader: 'style-loader' },
               {
@@ -88,22 +88,24 @@ module.exports = merge(webpackConfig, {
             ]
           },
           {
-            test: /\.(jpg|jpeg|bmp|png|webp|gif)$/,
-            loader: 'url-loader',
-            options: {
-              limit: 8 * 1024,
-              name: 'imgs/[name].[hash:8].[ext]',
-              outputPath: 'static',
-              publicPath: path.resolve(__dirname, '../dist')
+            test: /\.(jpe?g|bmp|png|webp|gif)$/,
+            type: 'asset/resource',
+            generator: {
+              filename: 'imgs/[name].[hash:8].[ext]'
             }
           },
           {
-            exclude: [/\.(js|jsx|mjs|ts|tsx|css|scss)$/, /\.html$/, /\.json$/],
-            loader: 'file-loader',
-            options: {
-              name: 'media/[path][name].[hash:8].[ext]',
-              outputPath: 'static',
-              publicPath: path.resolve(__dirname, '../dist')
+            test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
+            type: 'asset/resource',
+            generator: {
+              filename: 'fonts/[name].[hash:8].[ext]'
+            }
+          },
+          {
+            exclude: [/\.(mjs|[jt]sx?|s?css)$/, /\.html$/, /\.json$/],
+            type: 'asset/resource',
+            generator: {
+              filename: 'media/[path][name].[hash:8].[ext]'
             }
           }
         ]
