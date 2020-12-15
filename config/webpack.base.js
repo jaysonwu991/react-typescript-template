@@ -1,6 +1,7 @@
 const path = require('path')
 const argv = require('yargs').argv
 const { merge } = require('webpack-merge')
+const ESLintPlugin = require('eslint-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
@@ -38,77 +39,73 @@ module.exports = merge(webpackConfig, {
   module: {
     rules: [
       {
-        enforce: 'pre',
-        test: /\.tsx?$/,
-        exclude: /node_modules/,
-        include: [APP_PATH],
-        loader: 'eslint-loader',
-        options: {
-          emitWarning: true,
-          emitError: true,
-          fix: true
-        }
+        test: /\.html$/,
+        loader: 'html-loader'
       },
       {
-        oneOf: [
+        test: /\.tsx?$/,
+        enforce: 'pre',
+        include: APP_PATH,
+        use: [
           {
-            test: /\.html$/,
-            loader: 'html-loader'
-          },
-          {
-            test: /\.tsx?$/,
-            include: APP_PATH,
-            use: [
-              {
-                loader: 'babel-loader',
-                options: {
-                  cacheDirectory: true
-                }
-              },
-              {
-                loader: 'awesome-typescript-loader',
-                options: {
-                  silent: true
-                }
-              }
-            ]
-          },
-          {
-            test: /\.s?css$/,
-            use: [
-              { loader: 'style-loader' },
-              {
-                loader: 'css-loader',
-                options: {
-                  modules: false
-                }
-              },
-              'postcss-loader',
-              'sass-loader'
-            ]
-          },
-          {
-            test: /\.(jpe?g|bmp|png|webp|gif)$/,
-            type: 'asset/resource',
-            generator: {
-              filename: 'imgs/[name].[hash:8].[ext]'
-            }
-          },
-          {
-            test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
-            type: 'asset/resource',
-            generator: {
-              filename: 'fonts/[name].[hash:8].[ext]'
-            }
-          },
-          {
-            exclude: [/\.(mjs|[jt]sx?|s?css)$/, /\.html$/, /\.json$/],
-            type: 'asset/resource',
-            generator: {
-              filename: 'media/[path][name].[hash:8].[ext]'
+            loader: 'ts-loader',
+            options: {
+              transpileOnly: true
             }
           }
         ]
+      },
+      {
+        test: /\.jsx?$/,
+        include: APP_PATH,
+        use: [
+          {
+            loader: 'babel-loader',
+            options: {
+              cacheDirectory: true
+            }
+          }
+        ]
+      },
+      {
+        test: /\.s?css$/,
+        use: [
+          { loader: 'style-loader' },
+          {
+            loader: 'css-loader',
+            options: {
+              modules: false
+            }
+          },
+          'postcss-loader',
+          {
+            loader: 'sass-loader',
+            options: {
+              implementation: require('sass')
+            }
+          }
+        ]
+      },
+      {
+        test: /\.(jpe?g|bmp|png|webp|gif)$/,
+        type: 'asset/resource',
+        generator: {
+          filename: 'imgs/[name].[hash:8].[ext]'
+        }
+      },
+      {
+        test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
+        type: 'asset/resource',
+        generator: {
+          filename: 'fonts/[name].[hash:8].[ext]'
+        }
+      },
+      {
+        exclude: [/\.(mjs|[jt]sx?|s?css)$/, /\.html$/, /\.json$/],
+        type: 'asset/resource',
+        generator: {
+          filename: 'media/[path][name].[hash:8].[ext]'
+        }
       }
     ]
   },
@@ -120,6 +117,9 @@ module.exports = merge(webpackConfig, {
   },
   plugins: [
     new CleanWebpackPlugin(),
+    new ESLintPlugin({
+      extensions: ['ts', 'tsx']
+    }),
     new HtmlWebpackPlugin({
       inject: true,
       template: path.resolve(__dirname, '../public/index.html'),
