@@ -4,7 +4,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const TerserPlugin = require('terser-webpack-plugin')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
-const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin')
 const CompressionWebpackPlugin = require('compression-webpack-plugin')
 
 const productionGzipExtensions = ['js', 'css']
@@ -86,10 +86,10 @@ module.exports = merge(baseWebpackConfig, {
       }
     },
     minimizer: [
-      new OptimizeCSSAssetsPlugin({
-        cssProcessorOptions: { map: { inline: false } }
-      }),
-      new TerserPlugin()
+      new TerserPlugin(),
+      new CssMinimizerPlugin({
+        sourceMap: true
+      })
     ]
   }
 })
