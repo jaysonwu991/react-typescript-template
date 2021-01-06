@@ -26,9 +26,10 @@ if (bundleAnalyzerReport) {
 }
 
 module.exports = merge(webpackConfig, {
+  mode: 'production',
   devtool: 'eval-cheap-module-source-map',
   entry: {
-    app: './src/index.tsx',
+    app: path.resolve(__dirname, '../src/index.tsx'),
     vendor: ['react', 'react-dom']
   },
   output: {
