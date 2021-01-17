@@ -105,7 +105,7 @@ module.exports = merge(webpackConfig, {
         exclude: [/\.(mjs|[jt]sx?|s?css)$/, /\.html$/, /\.json$/],
         type: 'asset/resource',
         generator: {
-          filename: 'media/[path][name].[hash:8].[ext]'
+          filename: 'media/[name].[hash:8].[ext]'
         }
       }
     ]
