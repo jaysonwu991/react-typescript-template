@@ -28,7 +28,7 @@ module.exports = {
     quotes: [2, 'single'],
     'jsx-quotes': [2, 'prefer-single'],
     'object-curly-spacing': [2, 'always'],
-    'array-bracket-spacing': [2, 'always'],
+    'array-bracket-spacing': [2, 'never'],
     'comma-spacing': [2, { before: false, after: true }]
   }
 }
