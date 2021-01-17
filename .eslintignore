@@ -1,4 +1,2 @@
-**/*.js
-!src/**/*.js
-
 public
+!src/**/*.js
