@@ -1,23 +1,64 @@
 const path = require('path')
-const { merge } = require('webpack-merge')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const TerserPlugin = require('terser-webpack-plugin')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin')
 const CompressionWebpackPlugin = require('compression-webpack-plugin')
+// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 
 const productionGzipExtensions = ['js', 'css']
-const baseWebpackConfig = require('./webpack.base')
 
-module.exports = merge(baseWebpackConfig, {
+module.exports = {
   mode: 'production',
+  target: ['es5', 'web'],
   devtool: 'hidden-source-map',
+  entry: {
+    app: path.resolve(__dirname, '../src/index.tsx'),
+    vendor: ['react', 'react-dom']
+  },
   output: {
-    filename: 'script/[name].[contenthash:8].js'
+    publicPath: '/',
+    path: path.resolve(__dirname, '../dist'),
+    filename: 'scripts/[name].[contenthash:8].js'
+  },
+  resolve: {
+    extensions: ['.js', '.jsx', '.ts', '.tsx'],
+    alias: {
+      '@': path.resolve(__dirname, '../src/')
+    }
   },
   module: {
     rules: [
+      {
+        test: /\.tsx?$/,
+        enforce: 'pre',
+        include: path.resolve(__dirname, '../src'),
+        use: [
+          {
+            loader: 'ts-loader',
+            options: {
+              transpileOnly: true
+            }
+          }
+        ]
+      },
+      {
+        test: /\.jsx?$/,
+        include: path.resolve(__dirname, '../src'),
+        use: [
+          {
+            loader: 'babel-loader',
+            options: {
+              cacheDirectory: true
+            }
+          }
+        ]
+      },
+      {
+        test: /\.html$/,
+        use: ['html-loader']
+      },
       {
         test: /\.s?css$/,
         use: [
@@ -33,6 +74,27 @@ module.exports = merge(baseWebpackConfig, {
             }
           }
         ]
+      },
+      {
+        test: /\.(jpe?g|bmp|png|webp|gif)$/,
+        type: 'asset/resource',
+        generator: {
+          filename: 'images/[name].[hash:8].[ext]'
+        }
+      },
+      {
+        test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
+        type: 'asset/resource',
+        generator: {
+          filename: 'fonts/[name].[hash:8].[ext]'
+        }
+      },
+      {
+        exclude: [/(^|\.(mjs|[jt]sx?|s?css|html|json))$/],
+        type: 'asset/resource',
+        generator: {
+          filename: 'medias/[name].[hash:8].[ext]'
+        }
       }
     ]
   },
@@ -58,7 +120,7 @@ module.exports = merge(baseWebpackConfig, {
       }
     }),
     new MiniCssExtractPlugin({
-      filename: 'style/[name].[contenthash:8].css'
+      filename: 'styles/[name].[contenthash:8].css'
     }),
     new CompressionWebpackPlugin({
       filename: '[path][name].gz[query]',
@@ -67,6 +129,11 @@ module.exports = merge(baseWebpackConfig, {
       threshold: 10240,
       minRatio: 0.8
     })
+    // new BundleAnalyzerPlugin({
+    //   analyzerMode: 'static',
+    //   openAnalyzer: false,
+    //   reportFilename: path.join(path.resolve(__dirname, '../dist'), './report.html')
+    // })
   ],
   optimization: {
     splitChunks: {
@@ -91,4 +158,4 @@ module.exports = merge(baseWebpackConfig, {
       })
     ]
   }
-})
+}

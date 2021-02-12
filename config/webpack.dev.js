@@ -1,51 +1,118 @@
 const path = require('path')
 const webpack = require('webpack')
-const { merge } = require('webpack-merge')
+const ESLintPlugin = require('eslint-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-const baseWebpackConfig = require('./webpack.base')
 
-module.exports = merge(baseWebpackConfig, {
+const APP_PATH = path.resolve(__dirname, '../src')
+
+module.exports = {
   mode: 'development',
-  output: {
-    filename: 'script/[name].[hash:8].js',
-    publicPath: '/'
+  devtool: 'eval-cheap-module-source-map',
+  entry: {
+    app: path.resolve(__dirname, '../src/index.tsx'),
+    vendor: ['react', 'react-dom']
   },
-  plugins: [
-    new HtmlWebpackPlugin({
-      template: path.resolve(__dirname, '../public/index.html'),
-      minify: {
-        html5: true
+  output: {
+    publicPath: '/',
+    filename: 'scripts/[name].bundle.js',
+    path: path.resolve(__dirname, '../dist')
+  },
+  module: {
+    rules: [
+      {
+        test: /\.tsx?$/,
+        enforce: 'pre',
+        include: APP_PATH,
+        use: [
+          {
+            loader: 'ts-loader',
+            options: {
+              transpileOnly: true
+            }
+          }
+        ]
       },
-      hash: false
-    }),
-    new webpack.HotModuleReplacementPlugin()
-  ],
+      {
+        test: /\.jsx?$/,
+        include: APP_PATH,
+        use: [
+          {
+            loader: 'babel-loader',
+            options: {
+              cacheDirectory: true
+            }
+          }
+        ]
+      },
+      {
+        test: /\.html$/,
+        use: ['html-loader']
+      },
+      {
+        test: /\.s?css$/,
+        use: [
+          'style-loader',
+          {
+            loader: 'css-loader',
+            options: {
+              modules: false
+            }
+          },
+          'postcss-loader',
+          {
+            loader: 'sass-loader',
+            options: {
+              implementation: require('sass')
+            }
+          }
+        ]
+      },
+      {
+        test: /\.(jpe?g|bmp|png|webp|gif)$/,
+        type: 'asset/resource',
+        generator: {
+          filename: 'images/[name].[hash:8].[ext]'
+        }
+      },
+      {
+        test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
+        type: 'asset/resource',
+        generator: {
+          filename: 'fonts/[name].[hash:8].[ext]'
+        }
+      },
+      {
+        exclude: [/(^|\.(mjs|[jt]sx?|s?css|html|json))$/],
+        type: 'asset/resource',
+        generator: {
+          filename: 'medias/[name].[hash:8].[ext]'
+        }
+      }
+    ]
+  },
+  resolve: {
+    extensions: ['.js', '.jsx', '.ts', '.tsx'],
+    alias: {
+      '@': path.resolve(__dirname, '../src/')
+    }
+  },
   devServer: {
     hot: true,
     open: true,
     port: 8080,
-    quiet: false,
-    noInfo: false,
-    overlay: false,
-    compress: true,
-    publicPath: '/',
-    clientLogLevel: 'error',
-    historyApiFallback: true,
-    contentBase: path.join(__dirname, '../public'),
-    watchContentBase: true,
-    watchOptions: {
-      ignored: /node_modules/
-    }
+    overlay: true,
+    progress: true,
+    historyApiFallback: true
   },
-  stats: {
-    colors: true,
-    children: false,
-    chunks: false,
-    chunkModules: false,
-    modules: false,
-    builtAt: false,
-    entrypoints: false,
-    assets: false,
-    version: false
-  }
-})
+  plugins: [
+    new webpack.HotModuleReplacementPlugin(),
+    new ESLintPlugin({
+      extensions: ['ts', 'tsx']
+    }),
+    new HtmlWebpackPlugin({
+      inject: true,
+      showErrors: true,
+      template: path.resolve(__dirname, '../public/index.html')
+    })
+  ]
+}
