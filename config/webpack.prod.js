@@ -101,6 +101,7 @@ module.exports = {
   plugins: [
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
+      favicon: path.resolve(__dirname, '../public/favicon.ico'),
       template: path.resolve(__dirname, '../public/index.html'),
       minify: {
         removeComments: true,

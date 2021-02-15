@@ -2,11 +2,13 @@ const path = require('path')
 const webpack = require('webpack')
 const ESLintPlugin = require('eslint-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 
 const APP_PATH = path.resolve(__dirname, '../src')
 
 module.exports = {
   mode: 'development',
+  target: 'web',
   devtool: 'eval-cheap-module-source-map',
   entry: {
     app: path.resolve(__dirname, '../src/index.tsx'),
@@ -35,14 +37,7 @@ module.exports = {
       {
         test: /\.jsx?$/,
         include: APP_PATH,
-        use: [
-          {
-            loader: 'babel-loader',
-            options: {
-              cacheDirectory: true
-            }
-          }
-        ]
+        use: ['babel-loader']
       },
       {
         test: /\.html$/,
@@ -100,18 +95,24 @@ module.exports = {
     hot: true,
     open: true,
     port: 8080,
+    inline: true,
     overlay: true,
     progress: true,
-    historyApiFallback: true
+    compress: true,
+    historyApiFallback: true,
+    contentBase: path.resolve(__dirname, '../dist')
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
+    new CleanWebpackPlugin(),
     new ESLintPlugin({
-      extensions: ['ts', 'tsx']
+      extensions: ['js', 'jsx', 'ts', 'tsx']
     }),
     new HtmlWebpackPlugin({
+      cache: false,
       inject: true,
       showErrors: true,
+      favicon: path.resolve(__dirname, '../public/favicon.ico'),
       template: path.resolve(__dirname, '../public/index.html')
     })
   ]
