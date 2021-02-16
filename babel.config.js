@@ -1,12 +1,27 @@
 module.exports = {
   presets: [
-    '@babel/preset-react',
     [
       '@babel/preset-env',
       {
         corejs: 3,
+        modules: false,
         useBuiltIns: 'usage',
-        target: '> 1%, last 2 versions, not ie <= 8, iOS >= 8, Firefox >= 20,Android > 4.4'
+        targets: {
+          browsers: [
+            '> 1%',
+            'last 2 versions',
+            'not ie <= 8',
+            'iOS >= 8',
+            'Firefox >= 20',
+            'Android > 4.4'
+          ]
+        }
+      }
+    ],
+    [
+      '@babel/preset-react',
+      {
+        runtime: 'automatic'
       }
     ]
   ],

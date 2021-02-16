@@ -1,5 +1,4 @@
 const path = require('path')
-const webpack = require('webpack')
 const ESLintPlugin = require('eslint-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
@@ -95,15 +94,11 @@ module.exports = {
     hot: true,
     open: true,
     port: 8080,
-    inline: true,
-    overlay: true,
-    progress: true,
     compress: true,
-    historyApiFallback: true,
-    contentBase: path.resolve(__dirname, '../dist')
+    host: '0.0.0.0',
+    historyApiFallback: true
   },
   plugins: [
-    new webpack.HotModuleReplacementPlugin(),
     new CleanWebpackPlugin(),
     new ESLintPlugin({
       extensions: ['js', 'jsx', 'ts', 'tsx']
