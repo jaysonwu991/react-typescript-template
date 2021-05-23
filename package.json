@@ -4,6 +4,7 @@
   "description": "A React TypeScript Template Project",
   "main": "index.js",
   "scripts": {
+    "prepare": "husky install",
     "lint": "eslint src --ext js,.tsx",
     "lint:fix": "npm run lint -- --fix",
     "prettify": "prettier --write src/**/*.tsx",
