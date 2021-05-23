@@ -1,4 +1,6 @@
 const path = require('path')
+const env = require('./env.prod')
+const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const TerserPlugin = require('terser-webpack-plugin')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
@@ -15,18 +17,18 @@ module.exports = {
   devtool: 'hidden-source-map',
   entry: {
     app: path.resolve(__dirname, '../src/index.tsx'),
-    vendor: ['react', 'react-dom']
+    vendor: ['react', 'react-dom'],
   },
   output: {
     publicPath: '/',
     path: path.resolve(__dirname, '../dist'),
-    filename: 'scripts/[name].[contenthash:8].js'
+    filename: 'scripts/[name].[chunkhash:8].js',
   },
   resolve: {
     extensions: ['.js', '.jsx', '.ts', '.tsx'],
     alias: {
-      '@': path.resolve(__dirname, '../src/')
-    }
+      '@': path.resolve(__dirname, '../src/'),
+    },
   },
   module: {
     rules: [
@@ -38,10 +40,10 @@ module.exports = {
           {
             loader: 'ts-loader',
             options: {
-              transpileOnly: true
-            }
-          }
-        ]
+              transpileOnly: true,
+            },
+          },
+        ],
       },
       {
         test: /\.jsx?$/,
@@ -50,55 +52,60 @@ module.exports = {
           {
             loader: 'babel-loader',
             options: {
-              cacheDirectory: true
-            }
-          }
-        ]
+              cacheDirectory: true,
+            },
+          },
+        ],
       },
       {
         test: /\.html$/,
-        use: ['html-loader']
+        use: ['html-loader'],
       },
       {
         test: /\.s?css$/,
         use: [
           MiniCssExtractPlugin.loader,
           {
-            loader: 'css-loader'
+            loader: 'css-loader',
           },
           'postcss-loader',
           {
             loader: 'sass-loader',
             options: {
-              implementation: require('sass')
-            }
-          }
-        ]
+              implementation: require('sass'),
+            },
+          },
+        ],
       },
       {
         test: /\.(jpe?g|bmp|png|webp|gif)$/,
         type: 'asset/resource',
         generator: {
-          filename: 'images/[name].[hash:8].[ext]'
-        }
+          filename: 'images/[name].[hash:8].[ext]',
+        },
       },
       {
         test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
         type: 'asset/resource',
         generator: {
-          filename: 'fonts/[name].[hash:8].[ext]'
-        }
+          filename: 'fonts/[name].[hash:8].[ext]',
+        },
       },
       {
         exclude: [/(^|\.(mjs|[jt]sx?|s?css|html|json))$/],
         type: 'asset/resource',
         generator: {
-          filename: 'medias/[name].[hash:8].[ext]'
-        }
-      }
-    ]
+          filename: 'medias/[name].[hash:8].[ext]',
+        },
+      },
+    ],
   },
   plugins: [
+    new webpack.DefinePlugin({
+      'process.env': env,
+      NODE_ENV: env.NODE_ENV,
+      API_ENDPOINT: env.API_ENDPOINT,
+    }),
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
       favicon: path.resolve(__dirname, '../public/favicon.ico'),
@@ -117,19 +124,19 @@ module.exports = {
         keepClosingSlash: true,
         minifyJS: true,
         minifyCSS: true,
-        minifyURLs: true
-      }
+        minifyURLs: true,
+      },
     }),
     new MiniCssExtractPlugin({
-      filename: 'styles/[name].[contenthash:8].css'
+      filename: 'styles/[name].[contenthash:8].css',
     }),
     new CompressionWebpackPlugin({
       filename: '[path][name].gz[query]',
       algorithm: 'gzip',
       test: new RegExp('\\.(' + productionGzipExtensions.join('|') + ')$'),
       threshold: 10240,
-      minRatio: 0.8
-    })
+      minRatio: 0.8,
+    }),
     // new BundleAnalyzerPlugin({
     //   analyzerMode: 'static',
     //   openAnalyzer: false,
@@ -148,15 +155,15 @@ module.exports = {
           minChunks: 2,
           maxInitialRequests: 5,
           minSize: 0,
-          name: 'common'
-        }
-      }
+          name: 'common',
+        },
+      },
     },
     minimizer: [
       new TerserPlugin(),
       new CssMinimizerPlugin({
-        sourceMap: true
-      })
-    ]
-  }
+        parallel: true,
+      }),
+    ],
+  },
 }
