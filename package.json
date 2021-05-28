@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "prepare": "husky install",
-    "lint": "eslint src --ext .js,.tsx",
-    "lint:fix": "eslint src --ext .js,.tsx --fix",
-    "prettify": "prettier --write src/**/*.tsx",
+    "lint": "eslint src --ext .js,.ts,.tsx",
+    "lint:fix": "eslint src --ext .js,.ts,.tsx --fix",
+    "prettify": "prettier --write src/**/*.{ts,tsx}",
     "build": "webpack --config config/webpack.prod.js",
     "start": "cross-env NODE_ENV=development webpack serve --config config/webpack.dev.js"
   },
