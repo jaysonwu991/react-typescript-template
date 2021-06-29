@@ -14,7 +14,6 @@ const productionGzipExtensions = ['js', 'css']
 module.exports = {
   mode: 'production',
   target: ['es5', 'web'],
-  devtool: 'hidden-source-map',
   entry: {
     app: path.resolve(__dirname, '../src/index.tsx'),
     vendor: ['react', 'react-dom'],
