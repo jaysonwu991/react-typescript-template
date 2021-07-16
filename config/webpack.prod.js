@@ -7,6 +7,7 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin')
 const CompressionWebpackPlugin = require('compression-webpack-plugin')
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
 // const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 
 const productionGzipExtensions = ['js', 'css']
@@ -136,6 +137,7 @@ module.exports = {
       threshold: 10240,
       minRatio: 0.8,
     }),
+    new ForkTsCheckerWebpackPlugin(),
     // new BundleAnalyzerPlugin({
     //   analyzerMode: 'static',
     //   openAnalyzer: false,

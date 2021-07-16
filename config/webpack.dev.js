@@ -3,6 +3,7 @@ const env = require('./env.dev')
 const webpack = require('webpack')
 const ESLintPlugin = require('eslint-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin')
 
 const APP_PATH = path.resolve(__dirname, '../src')
@@ -120,5 +121,6 @@ module.exports = {
       template: path.resolve(__dirname, '../public/index.html'),
     }),
     new ReactRefreshWebpackPlugin(),
+    new ForkTsCheckerWebpackPlugin(),
   ],
 }
