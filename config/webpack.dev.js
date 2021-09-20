@@ -75,10 +75,6 @@ module.exports = {
         ],
       },
       {
-        test: /\.html$/,
-        use: ['html-loader'],
-      },
-      {
         test: /\.s?[ac]ss$/,
         use: [
           'style-loader',
