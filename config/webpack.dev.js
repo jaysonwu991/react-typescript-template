@@ -1,12 +1,10 @@
-const path = require('path')
-const env = require('./env.dev')
-const webpack = require('webpack')
-const ESLintPlugin = require('eslint-webpack-plugin')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
-const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
-const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin')
+const path = require('path');
+const env = require('./env.dev');
+const webpack = require('webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 
-const APP_PATH = path.resolve(__dirname, '../src')
+const APP_PATH = path.resolve(__dirname, '../src');
 
 module.exports = {
   mode: 'development',
@@ -27,9 +25,7 @@ module.exports = {
     hot: true,
     port: 8080,
     compress: true,
-    progress: true,
     historyApiFallback: true,
-    contentBase: path.resolve(__dirname, '../dist'),
   },
   module: {
     rules: [
@@ -39,9 +35,29 @@ module.exports = {
         include: APP_PATH,
         use: [
           {
-            loader: 'ts-loader',
+            loader: require.resolve('swc-loader'),
             options: {
-              transpileOnly: true,
+              jsc: {
+                parser: {
+                  jsx: true,
+                  dynamicImport: true,
+                  syntax: 'ecmascript',
+                },
+                transform: {
+                  react: {
+                    refresh: true,
+                    development: true,
+                    useBuiltins: true,
+                  },
+                },
+              },
+            },
+          },
+          {
+            loader: require.resolve('esbuild-loader'),
+            options: {
+              loader: 'tsx',
+              target: 'es2015',
             },
           },
         ],
@@ -110,9 +126,6 @@ module.exports = {
       NODE_ENV: env.NODE_ENV,
       API_ENDPOINT: env.API_ENDPOINT,
     }),
-    new ESLintPlugin({
-      extensions: ['js', 'jsx', 'ts', 'tsx'],
-    }),
     new HtmlWebpackPlugin({
       cache: false,
       inject: true,
@@ -121,6 +134,5 @@ module.exports = {
       template: path.resolve(__dirname, '../public/index.html'),
     }),
     new ReactRefreshWebpackPlugin(),
-    new ForkTsCheckerWebpackPlugin(),
   ],
-}
+};

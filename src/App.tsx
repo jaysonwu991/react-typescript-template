@@ -1,9 +1,7 @@
-import React from 'react'
+import React from 'react';
 
-import './App.scss'
+import './App.scss';
 
-const App = () => {
-  return <div>Hello World!</div>
-}
+const App = () => <div>Hello World!</div>;
 
-export default App
+export default App;

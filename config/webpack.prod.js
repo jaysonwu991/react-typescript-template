@@ -1,16 +1,15 @@
-const path = require('path')
-const env = require('./env.prod')
-const webpack = require('webpack')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
-const TerserPlugin = require('terser-webpack-plugin')
-const { CleanWebpackPlugin } = require('clean-webpack-plugin')
-const MiniCssExtractPlugin = require('mini-css-extract-plugin')
-const CssMinimizerPlugin = require('css-minimizer-webpack-plugin')
-const CompressionWebpackPlugin = require('compression-webpack-plugin')
-const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
+const path = require('path');
+const env = require('./env.prod');
+const webpack = require('webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
+const CompressionWebpackPlugin = require('compression-webpack-plugin');
 // const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 
-const productionGzipExtensions = ['js', 'css']
+const productionGzipExtensions = ['js', 'css'];
 
 module.exports = {
   mode: 'production',
@@ -38,9 +37,34 @@ module.exports = {
         include: path.resolve(__dirname, '../src'),
         use: [
           {
-            loader: 'ts-loader',
+            loader: require.resolve('swc-loader'),
             options: {
-              transpileOnly: true,
+              jsc: {
+                parser: {
+                  jsx: true,
+                  dynamicImport: true,
+                  syntax: 'ecmascript',
+                },
+                transform: {
+                  react: {
+                    useBuiltins: true,
+                  },
+                },
+                minify: {
+                  mangle: true,
+                  compress: {
+                    unused: true,
+                  },
+                },
+              },
+              minify: true,
+            },
+          },
+          {
+            loader: require.resolve('esbuild-loader'),
+            options: {
+              loader: 'tsx',
+              target: 'es2015',
             },
           },
         ],
@@ -137,7 +161,6 @@ module.exports = {
       threshold: 10240,
       minRatio: 0.8,
     }),
-    new ForkTsCheckerWebpackPlugin(),
     // new BundleAnalyzerPlugin({
     //   analyzerMode: 'static',
     //   openAnalyzer: false,
@@ -161,10 +184,17 @@ module.exports = {
       },
     },
     minimizer: [
-      new TerserPlugin(),
+      new TerserPlugin({
+        terserOptions: {
+          format: {
+            comments: false,
+          },
+        },
+        extractComments: false,
+      }),
       new CssMinimizerPlugin({
         parallel: true,
       }),
     ],
   },
-}
+};

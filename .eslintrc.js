@@ -3,7 +3,7 @@ module.exports = {
   env: {
     browser: true,
     node: true,
-    es6: true
+    es6: true,
   },
   parser: '@typescript-eslint/parser',
   parserOptions: {
@@ -11,8 +11,8 @@ module.exports = {
     sourceType: 'module',
     ecmaFeatures: {
       jsx: true,
-      experimentalObjectRestSpread: true
-    }
+      experimentalObjectRestSpread: true,
+    },
   },
   extends: ['eslint:recommended', 'plugin:react/recommended', 'prettier/prettier'],
   plugins: ['@typescript-eslint', 'babel', 'react', 'import', 'prettier', 'react-hooks'],
@@ -23,8 +23,8 @@ module.exports = {
     },
   },
   rules: {
-    'prettier/prettier': 2,
-    semi: [2, 'never'],
+    'prettier/prettier': 0,
+    semi: [2, 'always'],
     quotes: [2, 'single'],
     'jsx-quotes': [2, 'prefer-single'],
     'object-curly-spacing': [2, 'always'],
@@ -62,4 +62,4 @@ module.exports = {
       },
     ],
   },
-}
+};
