@@ -15,7 +15,7 @@
   "license": "ISC",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jayson991/react-typescript-template.git"
+    "url": "git+https://github.com/jaysonwu991/react-typescript-template.git"
   },
   "dependencies": {
     "core-js": "^3.18.0",
@@ -73,5 +73,13 @@
     "webpack-cli": "^4.8.0",
     "webpack-dev-server": "^4.2.1",
     "webpack-merge": "^5.8.0"
-  }
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not ie <= 8",
+    "Firefox >= 20",
+    "iOS >= 8",
+    "Android > 4.4"
+  ]
 }
