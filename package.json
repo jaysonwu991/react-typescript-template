@@ -7,7 +7,7 @@
     "setup": "pnpm install && husky install",
     "lint": "eslint src --ext .js,.ts,.tsx",
     "lint:fix": "eslint src --ext .js,.ts,.tsx --fix",
-    "prettify": "prettier --write src/**/*.{ts,tsx}",
+    "prettify": "prettier --write src/**/*.tsx",
     "build": "webpack --config config/webpack.prod.js",
     "start": "cross-env NODE_ENV=development webpack serve --config config/webpack.dev.js"
   },
