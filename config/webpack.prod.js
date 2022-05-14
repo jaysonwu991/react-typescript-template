@@ -7,7 +7,6 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const CompressionWebpackPlugin = require('compression-webpack-plugin');
-// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 
 const productionGzipExtensions = ['js', 'css'];
 
@@ -161,17 +160,12 @@ module.exports = {
       filename: 'styles/[name].[contenthash:8].css',
     }),
     new CompressionWebpackPlugin({
-      filename: '[path][name].gz[query]',
+      filename: '[path][name].[contenthash:8].gz[query]',
       algorithm: 'gzip',
       test: new RegExp('\\.(' + productionGzipExtensions.join('|') + ')$'),
       threshold: 10240,
       minRatio: 0.8,
     }),
-    // new BundleAnalyzerPlugin({
-    //   analyzerMode: 'static',
-    //   openAnalyzer: false,
-    //   reportFilename: path.join(path.resolve(__dirname, '../dist'), './report.html')
-    // })
   ],
   optimization: {
     splitChunks: {
