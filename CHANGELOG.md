@@ -1,3 +1,8 @@
+## 1.1.0
+
+- Update packages to the latest
+- Use `createRoot` from `react-dom/client` instead of `render` because of React 18 and React Dom 18
+
 ## 1.0.1
 
 - Update packages to the latest
