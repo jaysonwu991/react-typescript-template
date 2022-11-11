@@ -8,6 +8,7 @@ const APP_PATH = path.resolve(__dirname, '../src');
 
 module.exports = {
   mode: 'development',
+  stats: 'errors-warnings',
   devtool: 'eval-cheap-module-source-map',
   entry: [path.resolve(__dirname, '../src/index.tsx')],
   output: {
@@ -30,7 +31,7 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.tsx?$/,
+        test: /\.(j|t)sx?$/,
         enforce: 'pre',
         include: APP_PATH,
         use: [
@@ -58,18 +59,6 @@ module.exports = {
             options: {
               loader: 'tsx',
               target: 'es2015',
-            },
-          },
-        ],
-      },
-      {
-        test: /\.jsx?$/,
-        include: APP_PATH,
-        use: [
-          {
-            loader: require.resolve('babel-loader'),
-            options: {
-              plugins: [require.resolve('react-refresh/babel')].filter(Boolean),
             },
           },
         ],

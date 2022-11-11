@@ -12,6 +12,7 @@ const productionGzipExtensions = ['js', 'css'];
 
 module.exports = {
   mode: 'production',
+  stats: 'errors-warnings',
   target: ['es5', 'web'],
   entry: {
     app: path.resolve(__dirname, '../src/index.tsx'),
@@ -31,7 +32,7 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.tsx?$/,
+        test: /\.(j|t)sx?$/,
         enforce: 'pre',
         include: path.resolve(__dirname, '../src'),
         use: [
@@ -64,18 +65,6 @@ module.exports = {
             options: {
               loader: 'tsx',
               target: 'es2015',
-            },
-          },
-        ],
-      },
-      {
-        test: /\.jsx?$/,
-        include: path.resolve(__dirname, '../src'),
-        use: [
-          {
-            loader: 'babel-loader',
-            options: {
-              cacheDirectory: true,
             },
           },
         ],

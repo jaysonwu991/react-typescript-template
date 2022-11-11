@@ -1,3 +1,7 @@
+## 2.0.0
+
+- Remove all about `babel`
+
 ## 1.1.0
 
 - Update packages to the latest
