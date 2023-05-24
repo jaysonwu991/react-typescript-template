@@ -1,3 +1,8 @@
+## 2.0.1
+
+- Update packages to the latest
+- Remove `loader` option from `esbuild-loader`
+
 ## 2.0.0
 
 - Remove all about `babel`

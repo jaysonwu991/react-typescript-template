@@ -63,7 +63,6 @@ module.exports = {
           {
             loader: require.resolve('esbuild-loader'),
             options: {
-              loader: 'tsx',
               target: 'es2015',
             },
           },
